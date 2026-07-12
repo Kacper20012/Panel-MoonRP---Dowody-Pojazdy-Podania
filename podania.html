@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podania do Frakcji - Xenorrp</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="📋 Podania do Frakcji - Xenorrp">
+    <meta property="og:description" content="Złóż podanie do frakcji na Xenorrp!">
+    <meta property="og:image" content="logo.png">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+        }
+        
+        h1 { 
+            text-align: center; 
+            margin-bottom: 10px; 
+            font-size: 2.2em; 
+            color: #DC143C; 
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .subtitle { 
+            text-align: center; 
+            color: #a0a0c0; 
+            margin-bottom: 30px; 
+        }
+        
+        .form-box {
+            background: rgba(20, 20, 35, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+        }
+        
+        /* TABS - KATEGORIE FRAKCJI */
+        .faction-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .faction-tab {
+            padding: 12px 20px;
+            background: rgba(30, 30, 50, 0.6);
+            border: 2px solid #4a4a6a;
+            border-radius: 10px;
+            color: #c0c0d0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .faction-tab:hover {
+            border-color: #DC143C;
+            transform: translateY(-2px);
+        }
+        
+        .faction-tab.active {
+            background: linear-gradient(90deg, #8B0000, #DC143C);
+            border-color: #DC143C;
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
+        }
+        
+        .faction-tab-icon {
+            font-size: 1.3rem;
+        }
+        
+        /* FORM */
+        .form-group { 
+            margin-bottom: 18px; 
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+            color: #c0c0d0; 
+            font-weight: 600; 
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(30, 30, 50, 0.8);
+            border: 1px solid #4a4a6a;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus, textarea:focus { 
+            outline: none; 
+            border-color: #DC143C; 
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: #6a6a8a;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .faction-header {
+            background: rgba(220, 20, 60, 0.15);
+            border-left: 4px solid #DC143C;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .faction-header h3 {
+            color: #DC143C;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+        }
+        
+        .faction-header p {
+            color: #a0a0c0;
+            font-size: 0.9rem;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #8B0000, #DC143C);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        button:hover:not(:disabled) { 
+            opacity: 0.9; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
+        }
+        
+        button:disabled { 
+            opacity: 0.4; 
+            cursor: not-allowed; 
+        }
+        
+        .status { 
+            margin-top: 15px; 
+            text-align: center; 
+            font-size: 14px; 
+            min-height: 20px;
+            font-weight: 600;
+        }
+        
+        .success { color: #2ecc71; }
+        .error { color: #e74c3c; }
+        .info { color: #3498db; }
+        
+        small { 
+            color: #888; 
+            display: block; 
+            margin-top: 5px; 
+            font-size: 0.85em; 
+        }
+        
+        /* PANEL ADMINISTRATORA */
+        #adminPanel {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(231, 76, 60, 0.15);
+            border-radius: 8px;
+            border: 2px solid #e74c3c;
+        }
+        
+        #adminPanel h3 { 
+            color: #e74c3c; 
+            margin-bottom: 15px; 
+            text-align: center; 
+        }
+        
+        .applications-list { 
+            background: rgba(0,0,0,0.3); 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .application-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 3px solid #DC143C;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .application-info { 
+            flex: 1; 
+        }
+        
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .application-faction {
+            font-weight: bold;
+            color: #DC143C;
+            font-size: 1.05em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .application-name {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .application-details { 
+            font-size: 0.9em; 
+            color: #a0a0c0; 
+            line-height: 1.6;
+        }
+        
+        .application-date {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .faction-badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .badge-osp { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .badge-psp { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .badge-prm { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .badge-pd { background: rgba(168, 85, 247, 0.2); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.4); }
+        .badge-ksp { background: rgba(16, 185, 129, 0.2); color: #86efac; border: 1px solid rgba(16, 185, 129, 0.4); }
+        
+        .btn-delete-small {
+            background: #e74c3c;
+            padding: 6px 12px;
+            font-size: 0.85em;
+            width: auto;
+            margin: 0;
+            white-space: nowrap;
+        }
+        
+        .btn-delete-small:hover {
+            background: #c0392b;
+        }
+        
+        .admin-grid { 
+            display: grid; 
+            gap: 10px; 
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .admin-grid button { 
+            padding: 12px; 
+            font-size: 15px; 
+        }
+        
+        /* Scrollbar */
+        .applications-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .applications-list::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+        
+        .applications-list::-webkit-scrollbar-thumb {
+            background: #DC143C;
+            border-radius: 4px;
+        }
+        
+        .applications-list::-webkit-scrollbar-thumb:hover {
+            background: #8B0000;
+        }
+        
+        /* Statystyki */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-box {
+            background: rgba(220, 20, 60, 0.15);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #DC143C;
+        }
+        
+        .stat-label {
+            font-size: 0.8em;
+            color: #a0a0c0;
+            margin-top: 4px;
+        }
+        
+        /* Filter */
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 14px;
+            background: rgba(30, 30, 50, 0.6);
+            border: 1px solid #4a4a6a;
+            border-radius: 6px;
+            color: #c0c0d0;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: auto;
+            margin: 0;
+        }
+        
+        .filter-btn:hover {
+            border-color: #DC143C;
+        }
+        
+        .filter-btn.active {
+            background: #DC143C;
+            border-color: #DC143C;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 onclick="adminClick()" title="Kliknij 5x aby odblokować panel admina">📋 Podania do Frakcji</h1>
+        <p class="subtitle">Xenorrp | System Rekrutacji Służb</p>
+        
+        <div class="form-box">
+            <!-- KATEGORIE FRAKCJI -->
+            <div class="faction-tabs">
+                <div class="faction-tab active" onclick="selectFaction('osp', this)">
+                    <span class="faction-tab-icon">🚒</span>
+                    <span>OSP</span>
+                </div>
+                <div class="faction-tab" onclick="selectFaction('psp', this)">
+                    <span class="faction-tab-icon">🔥</span>
+                    <span>PSP</span>
+                </div>
+                <div class="faction-tab" onclick="selectFaction('prm', this)">
+                    <span class="faction-tab-icon">🚑</span>
+                    <span>PRM</span>
+                </div>
+                <div class="faction-tab" onclick="selectFaction('pd', this)">
+                    <span class="faction-tab-icon">🛠️</span>
+                    <span>Pomoc Drogowa</span>
+                </div>
+                <div class="faction-tab" onclick="selectFaction('ksp', this)">
+                    <span class="faction-tab-icon">🚔</span>
+                    <span>KSP</span>
+                </div>
+            </div>
+
+            <!-- OSP -->
+            <div class="form-section active" id="form-osp">
+                <div class="faction-header">
+                    <h3>🚒 Ochotnicza Straż Pożarna</h3>
+                    <p>Dołącz do jednostki OSP i pomagaj w akcjach ratowniczo-gaśniczych</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Twój Discord (wymagane)</label>
+                    <input type="text" id="osp-discord" placeholder="np. kamilaxe#1234" required>
+                </div>
+                <div class="form-group">
+                    <label>Imię i nazwisko postaci</label>
+                    <input type="text" id="osp-imie" placeholder="np. Jan Kowalski" required>
+                </div>
+                <div class="form-group">
+                    <label>Wiek postaci</label>
+                    <input type="number" id="osp-wiek" placeholder="np. 25" min="18" max="65" required>
+                </div>
+                <div class="form-group">
+                    <label>Doświadczenie w służbach ratunkowych</label>
+                    <select id="osp-doswiadczenie" required>
+                        <option value="">Wybierz...</option>
+                        <option value="Brak">Brak doświadczenia</option>
+                        <option value="Podstawowe">Podstawowe (kursy, szkolenia)</option>
+                        <option value="Średnie">Średnie (służba w innej frakcji)</option>
+                        <option value="Zaawansowane">Zaawansowane (wieloletnie doświadczenie)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dlaczego chcesz dołączyć do OSP?</label>
+                    <textarea id="osp-powod" placeholder="Opisz swoją motywację..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Czy posiadasz prawo jazdy kat. C?</label>
+                    <select id="osp-prawo" required>
+                        <option value="">Wybierz...</option>
+                        <option value="Tak">Tak</option>
+                        <option value="Nie">Nie</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dodatkowe informacje</label>
+                    <textarea id="osp-dodatkowe" placeholder="Uprawnienia, kursy, umiejętności specjalne..."></textarea>
+                </div>
+                
+                <button onclick="wyslijPodanie('osp')">🚒 Wyślij podanie do OSP</button>
+            </div>
+
+            <!-- PSP -->
+            <div class="form-section" id="form-psp">
+                <div class="faction-header">
+                    <h3>🔥 Państwowa Straż Pożarna</h3>
+                    <p>Profesjonalna służba w jednostkach PSP - najwyższy poziom ratownictwa</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Twój Discord (wymagane)</label>
+                    <input type="text" id="psp-discord" placeholder="np. kamilaxe#1234" required>
+                </div>
+                <div class="form-group">
+                    <label>Imię i nazwisko postaci</label>
+                    <input type="text" id="psp-imie" placeholder="np. Jan Kowalski" required>
+                </div>
+                <div class="form-group">
+                    <label>Wiek postaci</label>
+                    <input type="number" id="psp-wiek" placeholder="np. 28" min="21" max="60" required>
+                </div>
+                <div class="form-group">
+                    <label>Wykształcenie</label>
+                    <select id="psp-wyksztalcenie" required>
+                        <option value="">Wybierz...</option>
+                        <option value="Średnie">Średnie</option>
+                        <option value="Techniczne">Techniczne (pokrewne)</option>
+                        <option value="Wyższe - inżynier">Wyższe - inżynier pożarnictwa</option>
+                        <option value="Wyższe - magister">Wyższe - magister</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Preferowana jednostka</label>
+                    <select id="psp-jednostka" required>
+                        <option value="">Wybierz...</option>
+                        <option value="JRG-1">JRG-3 (Centrum)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Doświadczenie w PSP lub służbach</label>
+                    <textarea id="psp-doswiadczenie" placeholder="Opisz swoje doświadczenie..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Specjalizacja</label>
+                    <select id="psp-specjalizacja" required>
+                        <option value="">Wybierz...</option>
+                        <option value="Gaśnicza">Działalność gaśnicza</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dlaczego chcesz dołączyć do PSP?</label>
+                    <textarea id="psp-powod" placeholder="Opisz swoją motywację..." required></textarea>
+                </div>
+                
+                <button onclick="wyslijPodanie('psp')">🔥 Wyślij podanie do PSP</button>
+            </div>
+
+            <!-- PRM -->
+            <div class="form-section" id="form-prm">
+                <div class="faction-header">
+                    <h3>🚑 Pogotowie Ratownictwa Medycznego</h3>
+                    <p>Ratuj życie jako ratownik medyczny w zespołach PRM</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Twój Discord (wymagane)</label>
+                    <input type="text" id="prm-discord" placeholder="np. kamilaxe#1234" required>
+                </div>
+                <div class="form-group">
+                    <label>Imię i nazwisko postaci</label>
+                    <input type="text" id="prm-imie" placeholder="np. Jan Kowalski" required>
+                </div>
+                <div class="form-group">
+                    <label>Wiek postaci</label>
+                    <input type="number" id="prm-wiek" placeholder="np. 30" min="21" max="65" required>
+                </div>
+                <div class="form-group">
+                    <label>Posiadane uprawnienia medyczne</label>
+                    <select id="prm-uprawnienia" required>
+                        <option value="">Wybierz...</option>
+                        <option value="KPP">KPP (Kwalifikowana Pierwsza Pomoc)</option>
+                        <option value="Ratownik">Ratownik</option>
+                        <option value="Ratownik medyczny">Ratownik medyczny</option>
+                        <option value="Lekarz">Lekarz</option>
+                        <option value="Pielęgniarka">Pielęgniarka / Pielęgniarz</option>
+                        <option value="Posiadam">Tak</option>
+                        <option value="Nie Posiadam">Nie</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Preferowany typ zespołu</label>
+                    <select id="prm-zespol" required>
+                        <option value="">Wybierz...</option>
+                        <option value="P">Zespół Podstawowy (P)</option>
+                        <option value="S">Zespół Specjalistyczny (S)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Doświadczenie w medycynie</label>
+                    <textarea id="prm-doswiadczenie" placeholder="Opisz swoje doświadczenie medyczne..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Dlaczego chcesz dołączyć do PRM?</label>
+                    <textarea id="prm-powod" placeholder="Opisz swoją motywację..." required></textarea>
+                </div>
+                
+                <button onclick="wyslijPodanie('prm')">🚑 Wyślij podanie do PRM</button>
+            </div>
+
+            <!-- POMOC DROGOWA -->
+            <div class="form-section" id="form-pd">
+                <div class="faction-header">
+                    <h3>🛠️ Pomoc Drogowa</h3>
+                    <p>Pomagaj kierowcom w awariach, holowaniu i zabezpieczaniu miejsc zdarzeń</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Twój Discord (wymagane)</label>
+                    <input type="text" id="pd-discord" placeholder="np. kamilaxe#1234" required>
+                </div>
+                <div class="form-group">
+                    <label>Imię i nazwisko postaci</label>
+                    <input type="text" id="pd-imie" placeholder="np. Jan Kowalski" required>
+                </div>
+                <div class="form-group">
+                    <label>Wiek postaci</label>
+                    <input type="number" id="pd-wiek" placeholder="np. 28" min="18" max="65" required>
+                </div>
+                <div class="form-group">
+                    <label>Prawo jazdy - kategorie</label>
+                    <input type="text" id="pd-prawo" placeholder="np. B, C, C+E" required>
+                </div>
+                <div class="form-group">
+                    <label>Znajomość mechaniki pojazdów</label>
+                    <select id="pd-mechanika" required>
+                        <option value="">Wybierz...</option>
+                        <option value="Podstawowa">Podstawowa</option>
+                        <option value="Średnia">Średnia</option>
+                        <option value="Zaawansowana">Zaawansowana</option>
+                        <option value="Profesjonalna">Profesjonalna (mechanik)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Doświadczenie w pomocy drogowej</label>
+                    <textarea id="pd-doswiadczenie" placeholder="Opisz swoje doświadczenie..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Dlaczego chcesz dołączyć do Pomocy Drogowej?</label>
+                    <textarea id="pd-powod" placeholder="Opisz swoją motywację..." required></textarea>
+                </div>
+                
+                <button onclick="wyslijPodanie('pd')">🛠️ Wyślij podanie do Pomocy Drogowej</button>
+            </div>
+
+            <!-- KSP -->
+            <div class="form-section" id="form-ksp">
+                <div class="faction-header">
+                    <h3>🚔 Komenda Stołeczna Policji</h3>
+                    <p>Służ jako funkcjonariusz policji - patrol, ruch drogowy, kryminalny</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Twój Discord (wymagane)</label>
+                    <input type="text" id="ksp-discord" placeholder="np. kamilaxe#1234" required>
+                </div>
+                <div class="form-group">
+                    <label>Imię i nazwisko postaci</label>
+                    <input type="text" id="ksp-imie" placeholder="np. Jan Kowalski" required>
+                </div>
+                <div class="form-group">
+                    <label>Wiek postaci</label>
+                    <input type="number" id="ksp-wiek" placeholder="np. 25" min="21" max="60" required>
+                </div>
+                <div class="form-group">
+                    <label>Wykształcenie</label>
+                    <select id="ksp-wyksztalcenie" required>
+                        <option value="">Wybierz...</option>
+                        <option value="Średnie">Średnie</option>
+                        <option value="Wyższe - licencjat">Wyższe - licencjat</option>
+                        <option value="Wyższe - magister">Wyższe - magister</option>
+                        <option value="Szkoła policyjna">Szkoła policyjna</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Preferowany pion</label>
+                    <select id="ksp-pion" required>
+                        <option value="">Wybierz...</option>
+                        <option value="Patrolowy">Służba patrolowa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Czy posiadasz niekaralność?</label>
+                    <select id="ksp-niekaralnosć" required>
+                        <option value="">Wybierz...</option>
+                        <option value="Tak">Tak</option>
+                        <option value="Nie">Nie</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Doświadczenie w służbach mundurowych</label>
+                    <textarea id="ksp-doswiadczenie" placeholder="Opisz swoje doświadczenie..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Dlaczego chcesz dołączyć do KSP?</label>
+                    <textarea id="ksp-powod" placeholder="Opisz swoją motywację..." required></textarea>
+                </div>
+                
+                <button onclick="wyslijPodanie('ksp')">🚔 Wyślij podanie do KSP</button>
+            </div>
+            
+            <!-- Panel Administratora -->
+            <div id="adminPanel">
+                <h3>🔧 PANEL ADMINISTRATORA - PODANIA</h3>
+                
+                <div class="stats" id="statsContainer">
+                    <div class="stat-box">
+                        <div class="stat-number" id="totalApps">0</div>
+                        <div class="stat-label">Wszystkie</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="ospCount">0</div>
+                        <div class="stat-label">🚒 OSP</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="pspCount">0</div>
+                        <div class="stat-label">🔥 PSP</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="prmCount">0</div>
+                        <div class="stat-label">🚑 PRM</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="pdCount">0</div>
+                        <div class="stat-label">🛠️ PD</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="kspCount">0</div>
+                        <div class="stat-label">🚔 KSP</div>
+                    </div>
+                </div>
+                
+                <div class="filter-row">
+                    <button class="filter-btn active" onclick="filterApplications('all', this)">Wszystkie</button>
+                    <button class="filter-btn" onclick="filterApplications('osp', this)">🚒 OSP</button>
+                    <button class="filter-btn" onclick="filterApplications('psp', this)">🔥 PSP</button>
+                    <button class="filter-btn" onclick="filterApplications('prm', this)">🚑 PRM</button>
+                    <button class="filter-btn" onclick="filterApplications('pd', this)">🛠️ PD</button>
+                    <button class="filter-btn" onclick="filterApplications('ksp', this)">🚔 KSP</button>
+                </div>
+                
+                <div class="applications-list" id="applicationsList">
+                    <p style="text-align:center; color:#888;">Ładowanie listy podań...</p>
+                </div>
+                
+                <div class="admin-grid">
+                    <button onclick="odswiezListe()">🔄 Odśwież listę</button>
+                    <button onclick="schowajPanel()" style="background:#95a5a6;">❌ Zamknij panel</button>
+                </div>
+            </div>+++++++++++++++++++++++
+            
+            <div class="status" id="status"></div>
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ TWÓJ WEBHOOK - ZMIEŃ NA SWÓJ!
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1525925140532035735/EtGcxMqsDi7VGaECIW7Qw407PjteZVl5Tz1CmN3z7_uJH662qDbgxzngEVEVNEh1_Mbj";
+        const APPS_KEY = 'xenorrp_applications';
+        const ADMIN_CODE = 'XENORADMIN2026';
+        
+        let adminClicks = 0;
+        let currentFilter = 'all';
+        
+        // ===== DANE FRAKCJI =====
+        const factions = {
+            osp: {
+                name: 'OSP',
+                fullName: 'Ochotnicza Straż Pożarna',
+                icon: '🚒',
+                color: 15158332,
+                badge: 'badge-osp'
+            },
+            psp: {
+                name: 'PSP',
+                fullName: 'Państwowa Straż Pożarna',
+                icon: '🔥',
+                color: 15844367,
+                badge: 'badge-psp'
+            },
+            prm: {
+                name: 'PRM',
+                fullName: 'Pogotowie Ratownictwa Medycznego',
+                icon: '🚑',
+                color: 3447003,
+                badge: 'badge-prm'
+            },
+            pd: {
+                name: 'Pomoc Drogowa',
+                fullName: 'Pomoc Drogowa',
+                icon: '🛠️',
+                color: 10181046,
+                badge: 'badge-pd'
+            },
+            ksp: {
+                name: 'KSP',
+                fullName: 'Komenda Stołeczna Policji',
+                icon: '🚔',
+                color: 3066993,
+                badge: 'badge-ksp'
+            }
+        };
+
+        // ===== ZMIANA FRAKCJI =====
+        function selectFaction(faction, element) {
+            document.querySelectorAll('.faction-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+            
+            element.classList.add('active');
+            document.getElementById(`form-${faction}`).classList.add('active');
+        }
+
+        // ===== STATUS =====
+        function pokazStatus(msg, type) {
+            const el = document.getElementById('status');
+            el.textContent = msg;
+            el.className = `status ${type}`;
+        }
+
+        // ===== WYSYŁANIE PODANIA =====
+        async function wyslijPodanie(faction) {
+            const f = factions[faction];
+            const discord = document.getElementById(`${faction}-discord`).value.trim();
+            const imie = document.getElementById(`${faction}-imie`).value.trim();
+            const wiek = document.getElementById(`${faction}-wiek`).value.trim();
+            
+            // Walidacja podstawowa
+            if (!discord) {
+                pokazStatus('❌ Podaj swój Discord!', 'error');
+                return;
+            }
+            if (!imie) {
+                pokazStatus('❌ Podaj imię i nazwisko!', 'error');
+                return;
+            }
+            if (!wiek) {
+                pokazStatus('❌ Podaj wiek postaci!', 'error');
+                return;
+            }
+
+            // Pobierz wszystkie pola z formularza
+            const formData = {};
+            const formSection = document.getElementById(`form-${faction}`);
+            const inputs = formSection.querySelectorAll('input, select, textarea');
+            
+            inputs.forEach(input => {
+                if (input.id && input.value) {
+                    const label = formSection.querySelector(`label[for="${input.id}"]`);
+                    const fieldName = label ? label.textContent.replace(' (wymagane)', '').replace(' (opcjonalne)', '') : input.id;
+                    formData[fieldName] = input.value;
+                }
+            });
+
+            const btn = formSection.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = '⏳ Wysyłanie...';
+            pokazStatus(`📤 Wysyłam podanie do ${f.fullName}...`, 'info');
+
+            // Tworzenie embeda
+            const fields = Object.entries(formData).map(([key, value]) => ({
+                name: key,
+                value: value,
+                inline: value.length < 30
+            }));
+
+            const embed = {
+                title: `${f.icon} Podanie do ${f.fullName}`,
+                description: `Nowe podanie od **${imie}**`,
+                color: f.color,
+                fields: fields,
+                footer: { text: `System Rekrutacji Xenorrp | ${f.name}` },
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                const res = await fetch(WEBHOOK_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        embeds: [embed],
+                        content: `📋 **NOWE PODANIE** - ${f.icon} ${f.name} od **${imie}**`
+                    })
+                });
+
+                if (res.ok || res.status === 204 || res.status === 200) {
+                    // Zapisz podanie w localStorage
+                    zapiszPodanie({
+                        id: Date.now(),
+                        faction: faction,
+                        factionName: f.name,
+                        factionFullName: f.fullName,
+                        factionIcon: f.icon,
+                        data: formData,
+                        dataWysylki: new Date().toLocaleString('pl-PL')
+                    });
+                    
+                    pokazStatus(`✅ Podanie do ${f.fullName} zostało wysłane!`, 'success');
+                    
+                    // Wyczyść formularz
+                    inputs.forEach(input => {
+                        if (input.tagName === 'SELECT') {
+                            input.selectedIndex = 0;
+                        } else {
+                            input.value = '';
+                        }
+                    });
+                    
+                    setTimeout(() => pokazStatus('', ''), 3000);
+                } else {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+            } catch (err) {
+                console.error('❌ Błąd:', err);
+                pokazStatus('❌ Błąd wysyłania: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = `${f.icon} Wyślij podanie do ${f.name}`;
+            }
+        }
+
+        // ===== ZAPIS PODAŃ =====
+        function zapiszPodanie(application) {
+            const apps = JSON.parse(localStorage.getItem(APPS_KEY) || '[]');
+            apps.unshift(application);
+            localStorage.setItem(APPS_KEY, JSON.stringify(apps));
+        }
+
+        function pobierzPodania() {
+            return JSON.parse(localStorage.getItem(APPS_KEY) || '[]');
+        }
+
+        // ===== PANEL ADMINA =====
+        function adminClick() {
+            adminClicks++;
+            if (adminClicks >= 5) {
+                otworzPanelAdmina();
+                adminClicks = 0;
+            }
+        }
+
+        function otworzPanelAdmina() {
+            const kod = prompt('🔐 PODAJ KOD ADMINISTRATORA:');
+            if (kod === ADMIN_CODE) {
+                document.getElementById('adminPanel').style.display = 'block';
+                odswiezListe();
+                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+                alert('✅ Zalogowano jako Administrator');
+            } else if (kod !== null) {
+                alert('❌ BŁĘDNY KOD!');
+            }
+        }
+
+        function filterApplications(filter, element) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            element.classList.add('active');
+            odswiezListe();
+        }
+
+        function odswiezListe() {
+            const apps = pobierzPodania();
+            const listDiv = document.getElementById('applicationsList');
+            
+            // Aktualizuj statystyki
+            document.getElementById('totalApps').textContent = apps.length;
+            document.getElementById('ospCount').textContent = apps.filter(a => a.faction === 'osp').length;
+            document.getElementById('pspCount').textContent = apps.filter(a => a.faction === 'psp').length;
+            document.getElementById('prmCount').textContent = apps.filter(a => a.faction === 'prm').length;
+            document.getElementById('pdCount').textContent = apps.filter(a => a.faction === 'pd').length;
+            document.getElementById('kspCount').textContent = apps.filter(a => a.faction === 'ksp').length;
+            
+            // Filtruj
+            const filteredApps = currentFilter === 'all' ? apps : apps.filter(a => a.faction === currentFilter);
+            
+            if (filteredApps.length === 0) {
+                listDiv.innerHTML = '<p style="text-align:center; color:#888; padding: 20px;">Brak podań' + (currentFilter !== 'all' ? ' w tej kategorii' : '') + '</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            filteredApps.forEach((app, index) => {
+                const f = factions[app.faction];
+                const imie = app.data['Imię i nazwisko postaci'] || 'Nieznane';
+                const discord = app.data['Twój Discord (wymagane)'] || app.data['Twój Discord'] || 'Nieznane';
+                
+                // Zbuduj szczegóły - pokaż najważniejsze pola
+                let detailsHtml = '';
+                const importantFields = ['Wiek postaci', 'Preferowany pion', 'Preferowany typ zespołu', 'Preferowana jednostka', 'Specjalizacja', 'Posiadane uprawnienia medyczne'];
+                
+                importantFields.forEach(field => {
+                    if (app.data[field]) {
+                        detailsHtml += `${field}: <strong>${app.data[field]}</strong><br>`;
+                    }
+                });
+                
+                html += `
+                    <div class="application-item">
+                        <div class="application-info">
+                            <div class="application-header">
+                                <div class="application-faction">
+                                    ${app.factionIcon} ${app.factionName}
+                                    <span class="faction-badge ${f.badge}">${app.factionName}</span>
+                                </div>
+                            </div>
+                            <div class="application-name">👤 ${imie}</div>
+                            <div class="application-details">
+                                ${detailsHtml}
+                                👤 Discord: <strong>${discord}</strong>
+                            </div>
+                            <div class="application-date">📆 ${app.dataWysylki}</div>
+                            <button onclick="pokazSzczegoly(${apps.indexOf(app)})" style="margin-top: 10px; padding: 8px 16px; font-size: 0.85em; width: auto; background: #3b82f6;">
+                                📋 Pokaż szczegóły
+                            </button>
+                        </div>
+                        <button class="btn-delete-small" onclick="usunPodanie(${apps.indexOf(app)})">
+                            🗑️ Usuń
+                        </button>
+                    </div>
+                `;
+            });
+            
+            listDiv.innerHTML = html;
+        }
+
+        function pokazSzczegoly(index) {
+            const apps = pobierzPodania();
+            const app = apps[index];
+            
+            let details = `📋 SZCZEGÓŁY PODANIA\n`;
+            details += `${app.factionIcon} ${app.factionFullName}\n`;
+            details += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            
+            Object.entries(app.data).forEach(([key, value]) => {
+                details += `${key}:\n${value}\n\n`;
+            });
+            
+            details += `━━━━━━━━━━━━━━━━━━━━━\n`;
+            details += `📆 Data wysłania: ${app.dataWysylki}`;
+            
+            alert(details);
+        }
+
+        function usunPodanie(index) {
+            const apps = pobierzPodania();
+            const app = apps[index];
+            const imie = app.data['Imię i nazwisko postaci'] || 'Nieznane';
+            
+            if (!confirm(`⚠️ Czy na pewno chcesz usunąć podanie:\n\n${app.factionIcon} ${app.factionName}\n👤 ${imie}\n\nTa operacja jest nieodwracalna!`)) {
+                return;
+            }
+            
+            apps.splice(index, 1);
+            localStorage.setItem(APPS_KEY, JSON.stringify(apps));
+            
+            alert(`✅ Usunięto podanie do ${app.factionName}`);
+            odswiezListe();
+        }
+
+        function schowajPanel() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        // ===== SKRÓTY KLAWIATUROWE =====
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                e.preventDefault();
+                otworzPanelAdmina();
+            }
+        });
+    </script>
+</body>
+</html>

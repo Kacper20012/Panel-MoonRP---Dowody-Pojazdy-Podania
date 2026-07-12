@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rejestracja Pojazdów - Xenorrp</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🚗 Rejestracja Pojazdów - Xenorrp">
+    <meta property="og:description" content="Zarejestruj swój pojazd w systemie Xenorrp!">
+    <meta property="og:image" content="logo.png">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        
+        h1 { 
+            text-align: center; 
+            margin-bottom: 10px; 
+            font-size: 2.2em; 
+            color: #3b82f6; 
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .subtitle { 
+            text-align: center; 
+            color: #a0a0c0; 
+            margin-bottom: 30px; 
+        }
+        
+        .form-box {
+            background: rgba(20, 20, 35, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .form-group { 
+            margin-bottom: 18px; 
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+            color: #c0c0d0; 
+            font-weight: 600; 
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(30, 30, 50, 0.8);
+            border: 1px solid #4a4a6a;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus, textarea:focus { 
+            outline: none; 
+            border-color: #3b82f6; 
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: #6a6a8a;
+        }
+        
+        input:disabled, select:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+        }
+        
+        /* Upload zdjęcia */
+        .image-upload {
+            border: 2px dashed #4a4a6a;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            background: rgba(30, 30, 50, 0.4);
+        }
+        
+        .image-upload:hover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+        
+        .image-upload input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .upload-text {
+            color: #a0a0c0;
+            font-size: 0.95rem;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+            border: 2px solid #3b82f6;
+        }
+        
+        .image-preview.show {
+            display: block;
+        }
+        
+        .remove-image {
+            display: none;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            width: auto;
+        }
+        
+        .remove-image.show {
+            display: inline-block;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #1d4ed8, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        button:hover:not(:disabled) { 
+            opacity: 0.9; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        button:disabled { 
+            opacity: 0.4; 
+            cursor: not-allowed; 
+        }
+        
+        .status { 
+            margin-top: 15px; 
+            text-align: center; 
+            font-size: 14px; 
+            min-height: 20px;
+            font-weight: 600;
+        }
+        
+        .success { color: #2ecc71; }
+        .error { color: #e74c3c; }
+        .info { color: #3498db; }
+        
+        small { 
+            color: #888; 
+            display: block; 
+            margin-top: 5px; 
+            font-size: 0.85em; 
+        }
+        
+        /* PANEL ADMINISTRATORA */
+        #adminPanel {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(231, 76, 60, 0.15);
+            border-radius: 8px;
+            border: 2px solid #e74c3c;
+        }
+        
+        #adminPanel h3 { 
+            color: #e74c3c; 
+            margin-bottom: 15px; 
+            text-align: center; 
+        }
+        
+        .vehicle-list { 
+            background: rgba(0,0,0,0.3); 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .vehicle-item {
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 3px solid #3b82f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .vehicle-info { 
+            flex: 1; 
+        }
+        
+        .vehicle-name { 
+            font-weight: bold; 
+            color: #3b82f6; 
+            margin-bottom: 5px; 
+            font-size: 1.05em;
+        }
+        
+        .vehicle-details { 
+            font-size: 0.9em; 
+            color: #a0a0c0; 
+            line-height: 1.5;
+        }
+        
+        .btn-delete-small {
+            background: #e74c3c;
+            padding: 6px 12px;
+            font-size: 0.85em;
+            width: auto;
+            margin: 0;
+            white-space: nowrap;
+        }
+        
+        .btn-delete-small:hover {
+            background: #c0392b;
+        }
+        
+        .admin-grid { 
+            display: grid; 
+            gap: 10px; 
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .admin-grid button { 
+            padding: 12px; 
+            font-size: 15px; 
+        }
+        
+        /* Scrollbar */
+        .vehicle-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .vehicle-list::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+        
+        .vehicle-list::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+        
+        .vehicle-list::-webkit-scrollbar-thumb:hover {
+            background: #1d4ed8;
+        }
+        
+        /* Statystyki */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-box {
+            background: rgba(59, 130, 246, 0.15);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+        
+        .stat-label {
+            font-size: 0.85em;
+            color: #a0a0c0;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 onclick="adminClick()" title="Kliknij 5x aby odblokować panel admina">🚗 Rejestracja Pojazdów</h1>
+        <p class="subtitle">Xenorrp | System Rejestracji Pojazdów</p>
+        
+        <div class="form-box">
+            <div class="form-group">
+                <label>Twój Discord (wymagane)</label>
+                <input type="text" id="discord" placeholder="np. kamilaxe#1234 lub @kamilaxe" required>
+                <small>Podaj swój Discord abyśmy mogli się z Tobą skontaktować</small>
+            </div>
+
+            <div class="form-group">
+                <label>Imię i Nazwisko właściciela</label>
+                <input type="text" id="imie" placeholder="np. Michał Olczyk" required>
+            </div>
+
+            <div class="form-group">
+                <label>Marka pojazdu</label>
+                <input type="text" id="marka" placeholder="np. Bullhorn" required>
+            </div>
+
+            <div class="form-group">
+                <label>Model pojazdu</label>
+                <input type="text" id="model" placeholder="np. 2022 Determinator SFP FURY" required>
+            </div>
+
+            <div class="form-group">
+                <label>Numer rejestracyjny</label>
+                <input type="text" id="rejestracja" placeholder="np. KAW-201" style="text-transform: uppercase;" required>
+                <small>Maksymalnie 10 znaków</small>
+            </div>
+
+            <div class="form-group">
+                <label>Kolor pojazdu (opcjonalne)</label>
+                <input type="text" id="kolor" placeholder="np. Czarny mat">
+            </div>
+
+            <div class="form-group">
+                <label>Rok produkcji (opcjonalne)</label>
+                <input type="number" id="rok" placeholder="np. 2022" min="1900" max="2030">
+            </div>
+
+            <div class="form-group">
+                <label>📸 Zdjęcie pojazdu (opcjonalne)</label>
+                <div class="image-upload" id="dropZone">
+                    <input type="file" id="zdjecie" accept="image/*" onchange="handleImageSelect(event)">
+                    <div id="uploadText">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Kliknij aby wybrać zdjęcie</div>
+                    </div>
+                    <img id="imagePreview" class="image-preview" alt="Podgląd">
+                </div>
+                <button type="button" class="remove-image" id="removeImageBtn" onclick="removeImage()">🗑️ Usuń zdjęcie</button>
+            </div>
+            
+            <button id="submitBtn" onclick="zarejestrujPojazd()">🚗 Zarejestruj Pojazd</button>
+            
+            <!-- Panel Administratora -->
+            <div id="adminPanel">
+                <h3>🔧 PANEL ADMINISTRATORA - POJAZDY</h3>
+                
+                <div class="stats" id="statsContainer">
+                    <div class="stat-box">
+                        <div class="stat-number" id="totalVehicles">0</div>
+                        <div class="stat-label">Wszystkie pojazdy</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="todayVehicles">0</div>
+                        <div class="stat-label">Dzisiaj</div>
+                    </div>
+                </div>
+                
+                <div class="vehicle-list" id="vehicleList">
+                    <p style="text-align:center; color:#888;">Ładowanie listy pojazdów...</p>
+                </div>
+                
+                <div class="admin-grid">
+                    <button onclick="odswiezListe()">🔄 Odśwież listę</button>
+                    <button onclick="schowajPanel()" style="background:#95a5a6;">❌ Zamknij panel</button>
+                </div>
+            </div>
+            
+            <div class="status" id="status"></div>
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ TWÓJ WEBHOOK
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1524770923201433621/W8VZDPze0ZLG95sDrEDCxhOGyPDg9kMwhXYrGTeP2lhsWuDItsiL5w6dkuhdQMerRNEx";
+        const VEHICLES_KEY = 'xenorrp_vehicles';
+        const ADMIN_CODE = 'XENORADMIN2026';
+        
+        let selectedFile = null;
+        let adminClicks = 0;
+
+        // ===== OBSŁUGA ZDJĘCIA =====
+        
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Sprawdź rozmiar (max 8MB - limit Discord)
+                if (file.size > 8 * 1024 * 1024) {
+                    pokazStatus('❌ Plik jest za duży! Maksymalnie 8MB', 'error');
+                    event.target.value = '';
+                    return;
+                }
+                
+                selectedFile = file;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    const uploadText = document.getElementById('uploadText');
+                    const removeBtn = document.getElementById('removeImageBtn');
+                    
+                    preview.src = e.target.result;
+                    preview.classList.add('show');
+                    uploadText.style.display = 'none';
+                    removeBtn.classList.add('show');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function removeImage() {
+            selectedFile = null;
+            document.getElementById('zdjecie').value = '';
+            document.getElementById('imagePreview').classList.remove('show');
+            document.getElementById('uploadText').style.display = 'block';
+            document.getElementById('removeImageBtn').classList.remove('show');
+        }
+
+        // ===== STATUS =====
+        
+        function pokazStatus(msg, type) {
+            const el = document.getElementById('status');
+            el.textContent = msg;
+            el.className = `status ${type}`;
+        }
+
+        // ===== GŁÓWNA FUNKCJA REJESTRACJI =====
+        
+        async function zarejestrujPojazd() {
+            const discord = document.getElementById('discord').value.trim();
+            const imie = document.getElementById('imie').value.trim();
+            const marka = document.getElementById('marka').value.trim();
+            const model = document.getElementById('model').value.trim();
+            const rejestracja = document.getElementById('rejestracja').value.trim().toUpperCase();
+            const kolor = document.getElementById('kolor').value.trim() || 'Brak danych';
+            const rok = document.getElementById('rok').value.trim() || 'Brak danych';
+
+            // Walidacja
+            if (!discord) { 
+                pokazStatus('❌ Podaj swój Discord!', 'error'); 
+                return; 
+            }
+            if (!imie || !marka || !model || !rejestracja) {
+                pokazStatus('❌ Wypełnij wszystkie wymagane pola!', 'error');
+                return;
+            }
+            if (rejestracja.length > 10) {
+                pokazStatus('❌ Numer rejestracyjny jest za długi (max 10 znaków)!', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Rejestrowanie...';
+            pokazStatus('📤 Wysyłam dane na Discord...', 'info');
+
+            const dataRejestracji = new Date().toLocaleDateString('pl-PL');
+            const vehicleId = Date.now();
+
+            // Tworzenie embeda
+            const embed = {
+                title: `🚗 Rejestracja Pojazdu - ${rejestracja}`,
+                description: `Pojazd **${marka} ${model}** został zarejestrowany na właściciela **${imie}**`,
+                color: 3447003, // Niebieski
+                fields: [
+                    { name: "👤 Właściciel (Discord)", value: `\`${discord}\``, inline: true },
+                    { name: "📛 Imię i Nazwisko", value: imie, inline: true },
+                    { name: "🏷️ Marka", value: marka, inline: true },
+                    { name: "🚙 Model", value: model, inline: true },
+                    { name: "🔢 Rejestracja", value: `\`${rejestracja}\``, inline: true },
+                    { name: "🎨 Kolor", value: kolor, inline: true },
+                    { name: "📅 Rok produkcji", value: rok, inline: true },
+                    { name: "📆 Data rejestracji", value: dataRejestracji, inline: true }
+                ],
+                footer: { 
+                    text: "System Rejestracji Pojazdów Xenorrp"
+                },
+                timestamp: new Date().toISOString()
+            };
+
+            // Jeśli jest zdjęcie, dodaj je jako załącznik
+            if (selectedFile) {
+                embed.image = { url: 'attachment://pojazd.png' };
+            }
+
+            try {
+                const formData = new FormData();
+                
+                // Dodaj plik jeśli istnieje
+                if (selectedFile) {
+                    formData.append('files[0]', selectedFile, 'pojazd.png');
+                }
+                
+                // Dodaj payload JSON
+                formData.append('payload_json', JSON.stringify({ 
+                    embeds: [embed],
+                    content: `✅ Nowy pojazd zarejestrowany: **${marka} ${model}** (${rejestracja})`
+                }));
+
+                const res = await fetch(WEBHOOK_URL, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (res.ok || res.status === 204 || res.status === 200) {
+                    // Zapisz pojazd w localStorage
+                    zapiszPojazd({
+                        id: vehicleId,
+                        discord: discord,
+                        imie: imie,
+                        marka: marka,
+                        model: model,
+                        rejestracja: rejestracja,
+                        kolor: kolor,
+                        rok: rok,
+                        data: new Date().toLocaleString('pl-PL'),
+                        hasImage: selectedFile !== null
+                    });
+                    
+                    pokazStatus(`✅ Pojazd ${rejestracja} zarejestrowany!`, 'success');
+                    
+                    // Wyczyść formularz po 3 sekundach
+                    setTimeout(() => {
+                        document.getElementById('discord').value = '';
+                        document.getElementById('imie').value = '';
+                        document.getElementById('marka').value = '';
+                        document.getElementById('model').value = '';
+                        document.getElementById('rejestracja').value = '';
+                        document.getElementById('kolor').value = '';
+                        document.getElementById('rok').value = '';
+                        removeImage();
+                        pokazStatus('', '');
+                    }, 3000);
+                } else {
+                    const errorText = await res.text();
+                    console.error('Błąd Discord:', res.status, errorText);
+                    throw new Error(`HTTP ${res.status}: ${errorText}`);
+                }
+            } catch (err) {
+                console.error('❌ Błąd wysyłania:', err);
+                pokazStatus('❌ Błąd rejestracji: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🚗 Zarejestruj Pojazd';
+            }
+        }
+
+        // ===== FUNKCJE ZAPISU POJAZDÓW =====
+        
+        function zapiszPojazd(vehicle) {
+            const vehicles = JSON.parse(localStorage.getItem(VEHICLES_KEY) || '[]');
+            vehicles.unshift(vehicle); // Dodaj na początek
+            localStorage.setItem(VEHICLES_KEY, JSON.stringify(vehicles));
+        }
+
+        function pobierzPojazdy() {
+            return JSON.parse(localStorage.getItem(VEHICLES_KEY) || '[]');
+        }
+
+        // ===== FUNKCJE ADMINISTRATORA =====
+
+        function adminClick() {
+            adminClicks++;
+            if (adminClicks >= 5) {
+                otworzPanelAdmina();
+                adminClicks = 0;
+            }
+        }
+
+        function otworzPanelAdmina() {
+            const kod = prompt('🔐 PODAJ KOD ADMINISTRATORA:');
+            if (kod === ADMIN_CODE) {
+                document.getElementById('adminPanel').style.display = 'block';
+                odswiezListe();
+                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+                alert('✅ Zalogowano jako Administrator');
+            } else if (kod !== null) {
+                alert('❌ BŁĘDNY KOD!');
+            }
+        }
+
+        function odswiezListe() {
+            const vehicles = pobierzPojazdy();
+            const listDiv = document.getElementById('vehicleList');
+            
+            // Aktualizuj statystyki
+            document.getElementById('totalVehicles').textContent = vehicles.length;
+            
+            const today = new Date().toLocaleDateString('pl-PL');
+            const todayCount = vehicles.filter(v => v.data.startsWith(today)).length;
+            document.getElementById('todayVehicles').textContent = todayCount;
+            
+            if (vehicles.length === 0) {
+                listDiv.innerHTML = '<p style="text-align:center; color:#888; padding: 20px;">Brak zarejestrowanych pojazdów</p>';
+                return;
+            }
+            
+            let html = '<h4 style="margin-bottom:10px; color:#3b82f6;">📋 Zarejestrowane pojazdy:</h4>';
+            
+            vehicles.forEach((v, index) => {
+                html += `
+                    <div class="vehicle-item">
+                        <div class="vehicle-info">
+                            <div class="vehicle-name">🚗 ${v.marka} ${v.model} <span style="color:#fff;">[${v.rejestracja}]</span></div>
+                            <div class="vehicle-details">
+                                👤 Właściciel: <strong>${v.imie}</strong> (${v.discord})<br>
+                                🎨 Kolor: ${v.kolor} | 📅 Rok: ${v.rok}<br>
+                                📆 Zarejestrowano: ${v.data}
+                                ${v.hasImage ? ' | 📷 Ze zdjęciem' : ''}
+                            </div>
+                        </div>
+                        <button class="btn-delete-small" onclick="usunPojazd(${index})">
+                            🗑️ Usuń
+                        </button>
+                    </div>
+                `;
+            });
+            
+            listDiv.innerHTML = html;
+        }
+
+        function usunPojazd(index) {
+            const vehicles = pobierzPojazdy();
+            const vehicle = vehicles[index];
+            
+            if (!confirm(`⚠️ Czy na pewno chcesz usunąć pojazd:\n\n🚗 ${vehicle.marka} ${vehicle.model}\n🔢 ${vehicle.rejestracja}\n👤 ${vehicle.imie}\n\nTa operacja jest nieodwracalna!`)) {
+                return;
+            }
+            
+            vehicles.splice(index, 1);
+            localStorage.setItem(VEHICLES_KEY, JSON.stringify(vehicles));
+            
+            alert(`✅ Usunięto pojazd: ${vehicle.rejestracja}`);
+            odswiezListe();
+        }
+
+        function schowajPanel() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        // ===== SKRÓTY KLAWIATUROWE =====
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                e.preventDefault();
+                otworzPanelAdmina();
+            }
+        });
+
+        // ===== AUTO UPPERCASE DLA REJESTRACJI =====
+        
+        document.getElementById('rejestracja').addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html>
