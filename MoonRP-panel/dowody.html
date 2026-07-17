@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Dowodów - Moon RP</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🪪 Generator Dowodów - Moon RP">
+    <meta property="og:description" content="Wygeneruj swój dowód osobisty z avatarem Roblox na Moon RP!">
+    <meta property="og:image" content="logo.png">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        
+        h1 { 
+            text-align: center; 
+            margin-bottom: 10px; 
+            font-size: 2.2em; 
+            color: #9b59b6; 
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .subtitle { 
+            text-align: center; 
+            color: #a0a0c0; 
+            margin-bottom: 30px; 
+        }
+        
+        .form-box {
+            background: rgba(20, 20, 35, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border: 1px solid rgba(155, 89, 182, 0.3);
+        }
+        
+        .form-group { 
+            margin-bottom: 18px; 
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+            color: #c0c0d0; 
+            font-weight: 600; 
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(30, 30, 50, 0.8);
+            border: 1px solid #4a4a6a;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus { 
+            outline: none; 
+            border-color: #9b59b6; 
+        }
+        
+        input::placeholder {
+            color: #6a6a8a;
+        }
+        
+        select:disabled, input:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #8e44ad, #9b59b6);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        button:hover:not(:disabled) { 
+            opacity: 0.9; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+        }
+        
+        button:disabled { 
+            opacity: 0.4; 
+            cursor: not-allowed; 
+        }
+        
+        .status { 
+            margin-top: 15px; 
+            text-align: center; 
+            font-size: 14px; 
+            min-height: 20px;
+            font-weight: 600;
+        }
+        
+        .success { color: #2ecc71; }
+        .error { color: #e74c3c; }
+        .info { color: #3498db; }
+        
+        small { 
+            color: #888; 
+            display: block; 
+            margin-top: 5px; 
+            font-size: 0.85em; 
+        }
+        
+        #adminPanel {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(231, 76, 60, 0.15);
+            border-radius: 8px;
+            border: 2px solid #e74c3c;
+        }
+        
+        #adminPanel h3 { 
+            color: #e74c3c; 
+            margin-bottom: 15px; 
+            text-align: center; 
+        }
+        
+        .player-list { 
+            background: rgba(0,0,0,0.3); 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .player-item {
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 3px solid #9b59b6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .player-info { 
+            flex: 1; 
+        }
+        
+        .player-name { 
+            font-weight: bold; 
+            color: #9b59b6; 
+            margin-bottom: 5px; 
+        }
+        
+        .player-details { 
+            font-size: 0.9em; 
+            color: #a0a0c0; 
+            line-height: 1.5;
+        }
+        
+        .btn-delete-small {
+            background: #e74c3c;
+            padding: 6px 12px;
+            font-size: 0.85em;
+            width: auto;
+            margin: 0;
+            white-space: nowrap;
+        }
+        
+        .btn-delete-small:hover {
+            background: #c0392b;
+        }
+        
+        .admin-grid { 
+            display: grid; 
+            gap: 10px; 
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .admin-grid button { 
+            padding: 12px; 
+            font-size: 15px; 
+        }
+        
+        .player-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .player-list::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+        
+        .player-list::-webkit-scrollbar-thumb {
+            background: #9b59b6;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 onclick="adminClick()" title="Kliknij 5x aby odblokować panel admina">🪪 Generator Dowodów Osobistych</h1>
+        <p class="subtitle">Moon RP | System Rejestracji Postaci</p>
+        
+        <div class="form-box">
+            <div class="form-group">
+                <label>Twój Discord (wymagane)</label>
+                <input type="text" id="discord" placeholder="np. kamilaxe#1234 lub @kamilaxe" required>
+                <small>Podaj swój Discord abyśmy mogli się z Tobą skontaktować</small>
+            </div>
+
+            <div class="form-group">
+                <label>Wybierz slot postaci</label>
+                <select id="slotPostaci" required>
+                    <option value="">-- Wybierz slot --</option>
+                    <option value="Postać 1" id="opt1">Postać 1</option>
+                    <option value="Postać 2" id="opt2">Postać 2</option>
+                </select>
+                <small id="slotStatus"></small>
+            </div>
+
+            <div class="form-group">
+                <label>Imię i nazwisko postaci</label>
+                <input type="text" id="imie" placeholder="np. Oliwier Janisiewski" required>
+            </div>
+            
+            <div class="form-group">
+                <label>PESEL</label>
+                <input type="text" id="pesel" placeholder="np. 12345678910" maxlength="11" required>
+                <small>11 cyfr</small>
+            </div>
+            
+            <div class="form-group">
+                <label>Wiek (IC)</label>
+                <input type="number" id="wiek" placeholder="np. 32" min="1" max="120" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Wzrost (cm)</label>
+                <input type="number" id="wzrost" placeholder="np. 187" min="100" max="250" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Płeć</label>
+                <select id="plec">
+                    <option value="Mężczyzna">Mężczyzna</option>
+                    <option value="Kobieta">Kobieta</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Narodowość</label>
+                <input type="text" id="narodowosc" value="Polska" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Nick Roblox</label>
+                <input type="text" id="roblox" placeholder="np. kamilaxe23" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Link do profilu Roblox (opcjonalne)</label>
+                <input type="url" id="robloxProfile" placeholder="https://www.roblox.com/pl/users/3395706324/profile">
+                <small>Wklej link do profilu Roblox - avatar pobierze się automatycznie!</small>
+            </div>
+            
+            <button id="submitBtn" onclick="generujIWyslij()">📤 Wygeneruj i wyślij na Discord</button>
+            
+            <div id="adminPanel">
+                <h3>🔧 PANEL ADMINISTRATORA</h3>
+                
+                <div class="player-list" id="playerList">
+                    <p style="text-align:center; color:#888;">Ładowanie listy graczy...</p>
+                </div>
+                
+                <div class="admin-grid">
+                    <button onclick="odswiezListe()">🔄 Odśwież listę</button>
+                    <button onclick="schowajPanel()" style="background:#95a5a6;">❌ Zamknij panel</button>
+                </div>
+            </div>
+            
+            <div class="status" id="status"></div>
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ TWÓJ WEBHOOK - JUŻ WKLEJONY Z TWOJEGO KODU
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1524764795704967189/ueGDAJ1b4_2Ixe3jI_xTVjMtGqiO3DW3IRCsrf-UW7qB3akFiaVcBghjrJ_fUpX1Qavr";
+        const STORAGE_KEY = 'moon RP_slots';
+        const PLAYERS_KEY = 'moon RP_players';
+        const ADMIN_CODE = 'MoonRPAdmin2026';
+        let adminClicks = 0;
+
+        // ===== FUNKCJA POBIERAJĄCA AVATAR Z ROBLOX =====
+        
+        async function pobierzAvataraZProfilu(profileUrl) {
+            if (!profileUrl) return null;
+            
+            try {
+                // Wyciągnij User ID z URL
+                // Obsługuje: https://www.roblox.com/users/123456/profile
+                // oraz: https://www.roblox.com/pl/users/123456/profile
+                const match = profileUrl.match(/users\/(\d+)/);
+                
+                if (!match || !match[1]) {
+                    console.error('Nieprawidłowy link do profilu Roblox');
+                    return null;
+                }
+                
+                const userId = match[1];
+                console.log('🔍 Pobieram avatara dla User ID:', userId);
+                
+                // Pobierz avatar przez API Roblox (używając RoProxy żeby ominąć blokady CORS)
+                const response = await fetch(`https://thumbnails.roproxy.com/v1/users/avatar-headshot?userIds=${userId}&size=720x720&format=Png&isCircular=false`);
+                
+                if (!response.ok) {
+                    throw new Error('Błąd pobierania avatara z Roblox');
+                }
+                
+                const data = await response.json();
+                
+                if (data.data && data.data[0] && data.data[0].imageUrl) {
+                    const avatarUrl = data.data[0].imageUrl;
+                    console.log('✅ Znaleziono avatar:', avatarUrl);
+                    return avatarUrl;
+                }
+                
+                return null;
+                
+            } catch (error) {
+                console.error('❌ Błąd podczas pobierania avatara:', error);
+                return null;
+            }
+        }
+
+        // ===== FUNKCJE SLOTÓW =====
+        
+        function loadSlots() {
+            const taken = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            const opt1 = document.getElementById('opt1');
+            const opt2 = document.getElementById('opt2');
+            const status = document.getElementById('slotStatus');
+            const select = document.getElementById('slotPostaci');
+
+            opt1.disabled = taken.includes('Postać 1');
+            opt2.disabled = taken.includes('Postać 2');
+
+            if (taken.length >= 2) {
+                status.textContent = '❌ Masz już 2 postacie. Skontaktuj się z administracją.';
+                status.style.color = '#e74c3c';
+                select.disabled = true;
+            } else {
+                const free = 2 - taken.length;
+                status.textContent = `✅ Dostępne sloty: ${free}/2`;
+                status.style.color = '#2ecc71';
+                select.disabled = false;
+            }
+        }
+
+        function occupySlot(slot, discord, imiePostaci) {
+            const taken = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            const players = JSON.parse(localStorage.getItem(PLAYERS_KEY) || '{}');
+            
+            if (!taken.includes(slot)) {
+                taken.push(slot);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(taken));
+            }
+            
+            players[slot] = {
+                discord: discord,
+                postac: imiePostaci,
+                data: new Date().toLocaleString('pl-PL')
+            };
+            localStorage.setItem(PLAYERS_KEY, JSON.stringify(players));
+        }
+
+        // ===== STATUS =====
+        
+        function pokazStatus(msg, type) {
+            const el = document.getElementById('status');
+            el.textContent = msg;
+            el.className = `status ${type}`;
+        }
+
+        // ===== GŁÓWNA FUNKCJA WYSYŁANIA =====
+        
+        async function generujIWyslij() {
+            const discord = document.getElementById('discord').value.trim();
+            const slot = document.getElementById('slotPostaci').value;
+            const imie = document.getElementById('imie').value.trim();
+            const pesel = document.getElementById('pesel').value.trim();
+            const wiek = document.getElementById('wiek').value.trim();
+            const wzrost = document.getElementById('wzrost').value.trim();
+            const plec = document.getElementById('plec').value;
+            const narodowosc = document.getElementById('narodowosc').value.trim();
+            const roblox = document.getElementById('roblox').value.trim();
+            const robloxProfile = document.getElementById('robloxProfile').value.trim();
+            
+            // Walidacja podstawowa
+            if (!discord) { 
+                pokazStatus('❌ Podaj swój Discord!', 'error'); 
+                return; 
+            }
+            if (!slot) { 
+                pokazStatus('❌ Wybierz slot postaci!', 'error'); 
+                return; 
+            }
+            if (!imie || !pesel || !wiek || !wzrost || !narodowosc || !roblox) {
+                pokazStatus('❌ Wypełnij wszystkie wymagane pola!', 'error');
+                return;
+            }
+            if (pesel.length !== 11 || !/^\d+$/.test(pesel)) {
+                pokazStatus('❌ PESEL musi mieć dokładnie 11 cyfr!', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Przetwarzanie...';
+            
+            // Pobierz avatar z profilu Roblox jeśli podano link
+            let avatarUrl = null;
+            if (robloxProfile) {
+                pokazStatus('🔄 Pobieram avatara z Roblox...', 'info');
+                avatarUrl = await pobierzAvataraZProfilu(robloxProfile);
+                if (avatarUrl) {
+                    console.log('✅ Pobrano avatar:', avatarUrl);
+                } else {
+                    console.log('⚠️ Nie udało się pobrać avatara - wysyłam bez zdjęcia');
+                }
+            }
+
+            pokazStatus(`📤 Wysyłam ${slot}...`, 'info');
+
+            const dataWystawienia = new Date().toLocaleDateString('pl-PL');
+
+            // Tworzenie embeda
+            const embed = {
+                title: `🪪 Dowód Osobisty - ${slot}`,
+                description: `Dowód został wystawiony dla **${imie}**`,
+                color: 10181046,
+                fields: [
+                    { name: "👤 Gracz (Discord)", value: `\`${discord}\``, inline: true },
+                    { name: "📛 Imię i nazwisko", value: imie, inline: true },
+                    { name: "🔢 PESEL", value: `\`${pesel}\``, inline: true },
+                    { name: "🎂 Wiek", value: `${wiek} lat`, inline: true },
+                    { name: "📏 Wzrost", value: `${wzrost} cm`, inline: true },
+                    { name: "⚧ Płeć", value: plec, inline: true },
+                    { name: "🌍 Narodowość", value: narodowosc, inline: true },
+                    { name: "🎮 Nick Roblox", value: `\`${roblox}\``, inline: true },
+                    { name: "📅 Data wystawienia", value: dataWystawienia, inline: false }
+                ],
+                footer: { 
+                    text: "System Dowodów Moon RP"
+                },
+                timestamp: new Date().toISOString()
+            };
+
+            // Dodaj zdjęcie avatara jeśli udało się pobrać
+            if (avatarUrl) {
+                embed.thumbnail = { url: avatarUrl };
+            }
+
+            // Dodaj link do profilu Roblox jeśli podano
+            if (robloxProfile) {
+                embed.url = robloxProfile;
+            }
+
+            try {
+                const res = await fetch(WEBHOOK_URL, {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json" 
+                    },
+                    body: JSON.stringify({ 
+                        embeds: [embed],
+                        content: `✅ Nowy dowód wystawiony dla **${imie}** (${slot})`
+                    })
+                });
+
+                if (res.ok || res.status === 204 || res.status === 200) {
+                    occupySlot(slot, discord, imie);
+                    loadSlots();
+                    pokazStatus(`✅ ${slot} wysłana na Discord!`, 'success');
+                    
+                    // Wyczyść formularz po 3 sekundach
+                    setTimeout(() => {
+                        document.getElementById('discord').value = '';
+                        document.getElementById('imie').value = '';
+                        document.getElementById('pesel').value = '';
+                        document.getElementById('wiek').value = '';
+                        document.getElementById('wzrost').value = '';
+                        document.getElementById('roblox').value = '';
+                        document.getElementById('robloxProfile').value = '';
+                        document.getElementById('slotPostaci').value = '';
+                        pokazStatus('', '');
+                    }, 3000);
+                } else {
+                    const errorText = await res.text();
+                    console.error('Błąd Discord:', res.status, errorText);
+                    throw new Error(`HTTP ${res.status}: ${errorText}`);
+                }
+            } catch (err) {
+                console.error('❌ Błąd wysyłania:', err);
+                pokazStatus('❌ Błąd wysyłania: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📤 Wygeneruj i wyślij na Discord';
+            }
+        }
+
+        // ===== FUNKCJE ADMINISTRATORA =====
+
+        function adminClick() {
+            adminClicks++;
+            if (adminClicks >= 5) {
+                otworzPanelAdmina();
+                adminClicks = 0;
+            }
+        }
+
+        function otworzPanelAdmina() {
+            const kod = prompt('🔐 PODAJ KOD ADMINISTRATORA:');
+            if (kod === ADMIN_CODE) {
+                document.getElementById('adminPanel').style.display = 'block';
+                odswiezListe();
+                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+                alert('✅ Zalogowano jako Administrator');
+            } else if (kod !== null) {
+                alert('❌ BŁĘDNY KOD!');
+            }
+        }
+
+        function odswiezListe() {
+            const players = JSON.parse(localStorage.getItem(PLAYERS_KEY) || '{}');
+            const slots = Object.keys(players);
+            const listDiv = document.getElementById('playerList');
+            
+            if (slots.length === 0) {
+                listDiv.innerHTML = '<p style="text-align:center; color:#888; padding: 20px;">Brak zarejestrowanych postaci</p>';
+                return;
+            }
+            
+            let html = '<h4 style="margin-bottom:10px; color:#9b59b6;">📋 Zarejestrowane postacie:</h4>';
+            
+            slots.forEach(slot => {
+                const p = players[slot];
+                html += `
+                    <div class="player-item">
+                        <div class="player-info">
+                            <div class="player-name">${slot} - ${p.postac}</div>
+                            <div class="player-details">
+                                👤 Discord: <strong>${p.discord}</strong><br>
+                                📅 Data: ${p.data}
+                            </div>
+                        </div>
+                        <button class="btn-delete-small" onclick="usunPostacGracza('${slot}', '${p.discord.replace(/'/g, "\\'")}')">
+                            🗑️ Usuń
+                        </button>
+                    </div>
+                `;
+            });
+            
+            listDiv.innerHTML = html;
+        }
+
+        function usunPostacGracza(slot, discord) {
+            if (!confirm(`⚠️ Czy na pewno chcesz usunąć:\n\n${slot}: ${discord}?\n\nTa operacja jest nieodwracalna!`)) {
+                return;
+            }
+            
+            let sloty = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            let players = JSON.parse(localStorage.getItem(PLAYERS_KEY) || '{}');
+            
+            sloty = sloty.filter(s => s !== slot);
+            delete players[slot];
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(sloty));
+            localStorage.setItem(PLAYERS_KEY, JSON.stringify(players));
+            
+            alert(`✅ Usunięto postać: ${discord}`);
+            odswiezListe();
+            loadSlots();
+        }
+
+        function schowajPanel() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        // ===== SKRÓTY KLAWIATUROWE =====
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                e.preventDefault();
+                otworzPanelAdmina();
+            }
+        });
+
+        // ===== INICJALIZACJA =====
+        
+        window.addEventListener('DOMContentLoaded', loadSlots);
+    </script>
+</body>
+</html>
